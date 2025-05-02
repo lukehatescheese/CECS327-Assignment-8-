@@ -12,4 +12,4 @@
 6.) May need to install these Python packages: SQLAlchemy, greenlet, pip, psycopg2, typing_extensions, tzdata
 
         *To install Python packages in Pycharm: Navigate to bottom left and select "Python Packages" tab. From there, search for the above named packages and select install.
-        *
+        *In Command Prompt enter "python -m pip install" followed by the name of the package.
