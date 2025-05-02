@@ -1,4 +1,4 @@
-# CECS327-Assignment-8-
+# CECS327-Assignment-8-README
 1.) Compile and run asmt8server.py file
 
 2.) Compile and run Asmt8client.py file
