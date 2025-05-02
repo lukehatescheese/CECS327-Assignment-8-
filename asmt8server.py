@@ -38,7 +38,12 @@ def query1(): #What is the average moisture inside my kitchen fridge in the past
     with engine.connect() as conn:
         result = conn.execute(query1)
         avg_moisture = result.scalar()
-    print(f'Average fridge moisture in past three hours: {avg_moisture}% since {pst}')
+
+    # prints the result instead of returning for testing purposes
+    #print(f'Average fridge moisture in past three hours: {avg_moisture:.2f}% since {pst}')
+
+    # Return the result as a formatted string
+    return f'Average fridge moisture in past three hours: {avg_moisture:.2f}% since {pst}'
 
 def query2(): #What is the average water consumption per cycle in my smart dishwasher?
     # SQL query to calculate the average water consumption per cycle (using the last 5 records as cycles and treating each entry for dishwasher as one cycle)
@@ -58,10 +63,10 @@ def query2(): #What is the average water consumption per cycle in my smart dishw
         avg_water_consumption = result.scalar()
 
     # prints the result instead of returning for testing purposes
-    #print(f'Average water consumption per cycle in dishwasher: {avg_water_consumption} gallons per cycle')
+    #print(f'Average water consumption per cycle in dishwasher: {avg_water_consumption:.2f} gallons per cycle')
 
     # Return the result as a formatted string
-    return f'Average water consumption per cycle in dishwasher: {avg_water_consumption} gallons per cycle'
+    return f'Average water consumption per cycle in dishwasher: {avg_water_consumption:.2f} gallons per cycle'
 
 def query3(): #Which device consumed more electricity among my three IoT devices (two refrigerators and a dishwasher)?
     # SQL query to calculate the total electricity consumption for each device by summing their ammeter readings,
@@ -96,6 +101,7 @@ def query3(): #Which device consumed more electricity among my three IoT devices
         # Map the board name to a user-friendly device name using device_map
         return f'Device with the most electricity consumption: {device_map.get(device, device)}'
 
+#Manually run queries for testing purposes
 '''
 query1()
 query2()
