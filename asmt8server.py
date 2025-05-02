@@ -1,7 +1,8 @@
 import socket #Import socket module for network communication
-
 from sqlalchemy import create_engine,text
 from time import time
+from datetime import datetime, timezone #Imported for converting to PST
+from zoneinfo import ZoneInfo #Imported to select Los Angeles zone
 
 # Attempt to establish a connection to the PostgreSQL database using SQLAlchemy
 try:
@@ -21,7 +22,10 @@ device_map = {
 
 def query1(): #What is the average moisture inside my kitchen fridge in the past three hours?
     past_three_hours = int(time()) - 3 * 60 * 60
-    #SQL query to calculate the average moisture for kitchen fridge within past 3 hours
+    # Calculate past 3 hours
+    utc = datetime.fromtimestamp(past_three_hours, tz=timezone.utc)  # Convert to datetime in UTC
+    pst = utc.astimezone(ZoneInfo('America/Los_Angeles'))  # Assign time zone (America, Los Angeles) to account for area within California and daylight savings
+    #Finds average moisture for kitchen fridge within past 3 hours
     query1 = text(f"""
         SELECT
             AVG((payload->>'Moisture Meter - FridgeMoistureMeter')::float) AS avg_moisture
@@ -31,17 +35,10 @@ def query1(): #What is the average moisture inside my kitchen fridge in the past
             payload->>'board_name' = 'FridgeArduino'
             AND (payload->>'timestamp')::bigint >= {past_three_hours};
     """)
-
-    # Execute the query and retrieve the average moisture value
     with engine.connect() as conn:
         result = conn.execute(query1)
         avg_moisture = result.scalar()
-
-    #prints the result instead of returning for testing purposes
-    #print(f'Average fridge moisture in past three hours: {avg_moisture}%')
-
-    # Return the result as a formatted string
-    return f'Average fridge moisture in past three hours: {avg_moisture}%'
+    print(f'Average fridge moisture in past three hours: {avg_moisture}% since {pst}')
 
 def query2(): #What is the average water consumption per cycle in my smart dishwasher?
     # SQL query to calculate the average water consumption per cycle (using the last 5 records as cycles and treating each entry for dishwasher as one cycle)
